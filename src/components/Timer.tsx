@@ -3,16 +3,24 @@ import React, { useEffect } from "react";
 import { useTimersStore } from "@/lib/zustand/storeTimer";
 import { OctagonX, Pause, Play } from "lucide-react";
 
-export const Timer = ({ hours, minute, second }) => {
+type TimerStore = {
+  timers: any;
+  removeTimer: (index: number) => void;
+  startTimer: (index: number) => void;
+  stopTimer: (index: number) => void;
+  tickTimer: (index: number) => void;
+};
+
+export const Timer = () => {
   const { timers, removeTimer, startTimer, stopTimer, tickTimer } =
-    useTimersStore();
+    useTimersStore() as TimerStore;
   const radius = 50;
   const circumference = 2 * Math.PI * radius;
   const svgStyle = { transform: "rotate(-90deg)" };
 
   useEffect(() => {
     const interval = setInterval(() => {
-      timers.forEach((timer, index) => {
+      timers.forEach((timer: any, index: number) => {
         if (timer.isRunning) {
           tickTimer(index);
         }
@@ -27,7 +35,7 @@ export const Timer = ({ hours, minute, second }) => {
         "grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4 justify-items-center"
       }
     >
-      {timers.map((timer, index) => (
+      {timers.map((timer: any, index: number) => (
         <Card
           key={index}
           className={
