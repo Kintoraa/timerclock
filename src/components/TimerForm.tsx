@@ -18,29 +18,7 @@ import { useTimersStore } from "@/lib/zustand/storeTimer";
 import { Card } from "@/components/ui/card";
 import { InputForm } from "@/components/InputForm";
 import { Input } from "@/components/ui/input";
-import { toast } from "sonner";
-
-const formSchema = z
-  .object({
-    hours: z.string().regex(/^\d{0,3}$/, "Entrez 3 chiffres maximum"),
-    minutes: z.string().regex(/^\d{0,2}$/, "Entrez 2 chiffres maximum"),
-    seconds: z.string().regex(/^\d{0,2}$/, "Entrez 2 chiffres maximum"),
-    name: z
-      .string()
-      .max(10, "Le nom doit contenir 10 caractères maximum")
-      .optional(),
-  })
-  .refine((data) => {
-    const total =
-      parseInt(data.hours) + parseInt(data.minutes) + parseInt(data.seconds);
-    if (total > 0) return true;
-    if (total <= 0) {
-      toast.error("Le timer doit avoir au moins une valeur supérieure à zéro", {
-        duration: 1000,
-      });
-      return false;
-    }
-  });
+import { formSchema } from "@/lib/zod/schema";
 
 export const TimerForm = () => {
   const { addTimer } = useTimersStore();
@@ -55,12 +33,11 @@ export const TimerForm = () => {
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  const onSubmit = (values: z.infer<typeof formSchema>) =>
     addTimer(values.hours, values.minutes, values.seconds, values.name);
-  }
 
   return (
-    <div className={"flex flex-col"}>
+    <div className={"flex flex-col items-center"}>
       <Card className={"p-12 m-5 relative"}>
         <Form {...form}>
           <form

@@ -1,9 +1,11 @@
 import create from "zustand";
 import { toast } from "sonner";
-import { totalTime } from "@/app/totalTime";
+import { totalTime } from "@/app/calculatedTimePercentage";
 
-//
-// const audio = new Audio("../../app/sounds/minuteur.mp3");
+let audio;
+if (typeof window !== "undefined") {
+  audio = new Audio("/minuteur.mp3");
+}
 
 export const useTimersStore = create((set, get) => ({
   timers: [],
@@ -49,12 +51,13 @@ export const useTimersStore = create((set, get) => ({
       ),
     })),
 
-  stopTimer: (index) =>
+  stopTimer: (index) => {
     set((state) => ({
       timers: state.timers.map((timer, i) =>
         i === index ? { ...timer, isRunning: false } : timer,
       ),
-    })),
+    }));
+  },
 
   tickTimer: (index) =>
     set((state) => ({
@@ -64,7 +67,17 @@ export const useTimersStore = create((set, get) => ({
         let { hours, minutes, seconds } = timer;
         seconds--;
         if (seconds <= 0 && minutes <= 0 && hours <= 0) {
-          console.log("timer end");
+          const timer = get().timers;
+          toast.error(
+            `Alert fin du timer ${
+              timer[index].name ? `${timer[index].name}` : ""
+            } !`,
+            {
+              duration: 2000,
+              icon: "⏰",
+            },
+          );
+          audio.play();
           return {
             ...timer,
             hours: "00",
@@ -73,10 +86,10 @@ export const useTimersStore = create((set, get) => ({
             isRunning: false,
           };
         }
-        if (seconds <= 0) {
+        if (seconds < 0) {
           seconds = 59;
           minutes--;
-          if (minutes <= 0) {
+          if (minutes < 0) {
             minutes = 59;
             hours--;
           }
