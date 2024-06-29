@@ -20,6 +20,7 @@ export const secondFormatHours = (totalSeconds: number) => {
   const minutes = Math.floor((totalSeconds - hours * 3600) / 60);
   const seconds = totalSeconds - hours * 3600 - minutes * 60;
 
+  if (isNaN(totalSeconds)) return "⏲️";
   if (hours > 0) {
     return `${hours}h${minutes.toString().padStart(2, "0")}m`;
   } else if (minutes > 0) {
