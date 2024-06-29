@@ -3,10 +3,11 @@ import React, { useEffect } from "react";
 import { useTimersStore } from "@/lib/zustand/storeTimer";
 import { BellDot, OctagonX, Pause, Play } from "lucide-react";
 import {
-  calculatedTimePercentage,
+  calculatedEndTimer,
+  calculatedTime,
   secondFormatHours,
-} from "@/app/calculatedTimePercentage";
-import { Circle } from "@/components/ui/Circle";
+} from "@/app/calculatedTime";
+import { Circle } from "@/components/Circle";
 import { toast } from "sonner";
 
 type TimerStore = {
@@ -39,23 +40,30 @@ export const Timer = () => {
       }
     >
       {timers.map((timer: any, index: number) => {
-        const totalTimeInSeconds = calculatedTimePercentage(
+        const totalTimeInSeconds = calculatedTime(
           timer.hours,
           timer.minutes,
           timer.seconds,
           timer.timeStart,
         );
+
         return (
           <Card
             key={index}
             className={
-              "text-center size-40 p-3 rounded-lg flex flex-col h-full relative items-center"
+              "text-center size-40 p-3 rounded-lg flex flex-col h-full relative items-center animate-fadeIn"
             }
           >
             <BellDot
               className={"absolute top-2 left-2 size-4 cursor-pointer"}
               onClick={() => {
-                toast.info("Le minuteur sonnera a : ( a venir)  ");
+                toast.info(
+                  `Le minuteur sonnera a ${calculatedEndTimer(
+                    timer.hours,
+                    timer.minutes,
+                    timer.seconds,
+                  )}  `,
+                );
               }}
             />
             <CardTitle className={" p-3"}>{timer.name}</CardTitle>
@@ -87,7 +95,7 @@ export const Timer = () => {
                 )}
                 {!timer.isRunning && (
                   <button
-                    className={"size-2"}
+                    className={"size-2 focus:animate-fadeOutLeft"}
                     onClick={() => startTimer(index)}
                   >
                     <Play className={"size-4 text-green-400"}></Play>
