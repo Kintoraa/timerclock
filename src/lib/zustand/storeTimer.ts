@@ -1,6 +1,6 @@
 import create from "zustand";
 import { toast } from "sonner";
-import { totalTime } from "@/app/calculatedTimePercentage";
+import { totalTime } from "@/app/calculatedTime";
 
 let audio;
 if (typeof window !== "undefined") {

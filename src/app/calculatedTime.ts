@@ -1,4 +1,4 @@
-export const calculatedTimePercentage = (
+export const calculatedTime = (
   hours: string,
   minutes: string,
   seconds: string,
@@ -27,4 +27,18 @@ export const secondFormatHours = (totalSeconds: number) => {
   } else {
     return `${seconds}s`;
   }
+};
+
+export const calculatedEndTimer = (
+  hours: string,
+  minutes: string,
+  seconds: string,
+) => {
+  const timerClock = totalTime(hours, minutes, seconds);
+  const time = new Date().getTime() + timerClock * 1000;
+  return (
+    new Date(time).getHours() +
+    "h" +
+    new Date(time).getMinutes().toString().padStart(2, "0")
+  );
 };
